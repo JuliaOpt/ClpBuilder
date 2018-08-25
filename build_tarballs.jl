@@ -45,8 +45,8 @@ platforms = [
 # The products that we will ensure are always built
 products(prefix) = [
     LibraryProduct(prefix, "libOsiClp", :libOsiClp),
-    LibraryProduct(prefix, "libClp", :libClpSolver),
-    LibraryProduct(prefix, "libClpSolver", :libOsiClp)
+    LibraryProduct(prefix, "libClp", :libClp),
+    LibraryProduct(prefix, "libClpSolver", :libClpSolver)
 ]
 
 # Dependencies that must be installed before this package can be built
