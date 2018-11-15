@@ -27,8 +27,8 @@ for path in ${LD_LIBRARY_PATH//:/ }; do
 done
 mkdir build
 cd build/
-if [ $target = "x86_64-w64-mingw32" ] || [ $target = "i686-w64-mingw32" ]; then 
-export LDFLAGS="-L${prefix}/lib -lcoinglpk -lCoinUtils"
+if [ $target = "x86_64-w64-mingw32" ] || [ $target = "i686-w64-mingw32" ]; then
+export LDFLAGS="-L${prefix}/lib -lCoinUtils"
 fi
 export CPPFLAGS="-DCOIN_USE_MUMPS_MPI_H"
 ../configure --prefix=$prefix --with-pic --disable-pkg-config --host=${target} --enable-shared --disable-static \
@@ -38,7 +38,6 @@ export CPPFLAGS="-DCOIN_USE_MUMPS_MPI_H"
 --with-lapack="-L${prefix}/lib -lcoinlapack" \
 --with-metis-lib="-L${prefix}/lib -lcoinmetis" --with-metis-incdir="$prefix/include/coin/ThirdParty" \
 --with-mumps-lib="-L${prefix}/lib -lcoinmumps" --with-mumps-incdir="$prefix/include/coin/ThirdParty" \
---with-glpk-lib="-L${prefix}/lib -lcoinglpk" --with-glpk-incdir="$prefix/include/coin/ThirdParty" \
 --with-coinutils-lib="-L${prefix}/lib -lCoinUtils" --with-coinutils-incdir="$prefix/include/coin" \
 --with-osi-lib="-L${prefix}/lib -lOsi" --with-osi-incdir="$prefix/include/coin"
 make -j${nproc}
@@ -58,6 +57,10 @@ platforms = [
     Windows(:x86_64)
 ]
 platforms = expand_gcc_versions(platforms)
+# To fix gcc4 bug in Windows
+platforms = setdiff(platforms, [Windows(:x86_64, compiler_abi=CompilerABI(:gcc4)), Windows(:i686, compiler_abi=CompilerABI(:gcc4))])
+push!(platforms, Windows(:i686,compiler_abi=CompilerABI(:gcc6)))
+push!(platforms, Windows(:x86_64,compiler_abi=CompilerABI(:gcc6)))
 
 # The products that we will ensure are always built
 products(prefix) = [
@@ -70,7 +73,6 @@ products(prefix) = [
 dependencies = [
     "https://github.com/JuliaOpt/OsiBuilder/releases/download/v0.107.9-1/build_OsiBuilder.v0.107.9.jl",
     "https://github.com/JuliaOpt/CoinUtilsBuilder/releases/download/v2.10.14-1/build_CoinUtilsBuilder.v2.10.14.jl",
-    "https://github.com/JuliaOpt/COINGLPKBuilder/releases/download/v1.10.5-1/build_COINGLPKBuilder.v1.10.5.jl",
     "https://github.com/JuliaOpt/COINMumpsBuilder/releases/download/v1.6.0-1/build_COINMumpsBuilder.v1.6.0.jl",
     "https://github.com/JuliaOpt/COINMetisBuilder/releases/download/v1.3.5-1/build_COINMetisBuilder.v1.3.5.jl",
     "https://github.com/JuliaOpt/COINLapackBuilder/releases/download/v1.5.6-1/build_COINLapackBuilder.v1.5.6.jl",
@@ -80,4 +82,3 @@ dependencies = [
 
 # Build the tarballs, and possibly a `build.jl` as well.
 build_tarballs(ARGS, name, version, sources, script, platforms, products, dependencies)
-
