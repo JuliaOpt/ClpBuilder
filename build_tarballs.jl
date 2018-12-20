@@ -39,8 +39,8 @@ fi
 ../configure --prefix=$prefix --with-pic --disable-pkg-config --host=${target} --enable-shared --disable-static \
 --enable-dependency-linking lt_cv_deplibs_check_method=pass_all \
 --with-asl-lib="-L${prefix}/lib -lasl" --with-asl-incdir="$prefix/include/asl" \
---with-blas="-L${prefix}/lib -lcoinblas" \
---with-lapack="-L${prefix}/lib -lcoinlapack" \
+--with-blas-lib="-L${prefix}/lib -lcoinblas" \
+--with-lapack-lib="-L${prefix}/lib -lcoinlapack" \
 --with-metis-lib="-L${prefix}/lib -lcoinmetis" --with-metis-incdir="$prefix/include/coin/ThirdParty" \
 --with-mumps-lib="-L${prefix}/lib -lcoinmumps" --with-mumps-incdir="$prefix/include/coin/ThirdParty" \
 --with-coinutils-lib="-L${prefix}/lib -lCoinUtils" --with-coinutils-incdir="$prefix/include/coin" \
@@ -84,20 +84,20 @@ push!(platforms, Windows(:x86_64,compiler_abi=CompilerABI(:gcc6)))
 
 # The products that we will ensure are always built
 products(prefix) = [
-    LibraryProduct(prefix, "libOsiClp", :libOsiClp),
+ #   LibraryProduct(prefix, "libOsiClp", :libOsiClp),
     LibraryProduct(prefix, "libClp", :libClp),
     LibraryProduct(prefix, "libClpSolver", :libClpSolver)
 ]
 
 # Dependencies that must be installed before this package can be built
 dependencies = [
-    "https://github.com/JuliaOpt/OsiBuilder/releases/download/v0.107.9-1/build_OsiBuilder.v0.107.9.jl",
-    "https://github.com/JuliaOpt/CoinUtilsBuilder/releases/download/v2.10.14-1/build_CoinUtilsBuilder.v2.10.14.jl",
-    "https://github.com/JuliaOpt/COINMumpsBuilder/releases/download/v1.6.0-1/build_COINMumpsBuilder.v1.6.0.jl",
-    "https://github.com/JuliaOpt/COINMetisBuilder/releases/download/v1.3.5-1/build_COINMetisBuilder.v1.3.5.jl",
-    "https://github.com/JuliaOpt/COINLapackBuilder/releases/download/v1.5.6-1/build_COINLapackBuilder.v1.5.6.jl",
-    "https://github.com/JuliaOpt/COINBLASBuilder/releases/download/v1.4.6-1/build_COINBLASBuilder.v1.4.6.jl",
-    "https://github.com/JuliaOpt/ASLBuilder/releases/download/v3.1.0-1/build_ASLBuilder.v3.1.0.jl"
+    "https://github.com/JuliaOpt/OsiBuilder/releases/download/v0.107.9-1-static/build_OsiBuilder.v0.107.9.jl",
+    "https://github.com/JuliaOpt/CoinUtilsBuilder/releases/download/v2.10.14-1-static/build_CoinUtilsBuilder.v2.10.14.jl",
+    "https://github.com/JuliaOpt/COINMumpsBuilder/releases/download/v1.6.0-1-static/build_COINMumpsBuilder.v1.6.0.jl",
+    "https://github.com/JuliaOpt/COINMetisBuilder/releases/download/v1.3.5-1-static/build_COINMetisBuilder.v1.3.5.jl",
+    "https://github.com/JuliaOpt/COINLapackBuilder/releases/download/v1.5.6-1-static/build_COINLapackBuilder.v1.5.6.jl",
+    "https://github.com/JuliaOpt/COINBLASBuilder/releases/download/v1.4.6-1-static/build_COINBLASBuilder.v1.4.6.jl",
+    "https://github.com/JuliaOpt/ASLBuilder/releases/download/v3.1.0-1-static/build_ASLBuilder.v3.1.0.jl"
 ]
 
 # Build the tarballs, and possibly a `build.jl` as well.
