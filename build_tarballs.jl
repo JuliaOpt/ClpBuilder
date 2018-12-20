@@ -60,16 +60,6 @@ LDFLAGS=-ldl;
 #--with-osi-lib="-L${prefix}/lib -lOsi" --with-osi-incdir="$prefix/include/coin"
 ## DYNAMIC BUILD END
 
-
-../configure --prefix=$prefix --with-pic --disable-pkg-config --host=${target} --enable-shared --disable-static \
---enable-dependency-linking lt_cv_deplibs_check_method=pass_all \
---with-asl-lib="-L${prefix}/lib -lasl" --with-asl-incdir="$prefix/include/asl" \
---with-blas="-L${prefix}/lib -lcoinblas" \
---with-lapack="-L${prefix}/lib -lcoinlapack" \
---with-metis-lib="-L${prefix}/lib -lcoinmetis" --with-metis-incdir="$prefix/include/coin/ThirdParty" \
---with-mumps-lib="-L${prefix}/lib -lcoinmumps" --with-mumps-incdir="$prefix/include/coin/ThirdParty" \
---with-coinutils-lib="-L${prefix}/lib -lCoinUtils" --with-coinutils-incdir="$prefix/include/coin" \
---with-osi-lib="-L${prefix}/lib -lOsi" --with-osi-incdir="$prefix/include/coin"
 make -j${nproc}
 make install
 
