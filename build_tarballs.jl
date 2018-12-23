@@ -34,7 +34,7 @@ export CPPFLAGS="-DNDEBUG -w -DCOIN_USE_MUMPS_MPI_H"
 
 ## STATIC BUILD START
 if [ $target = "x86_64-apple-darwin14" ]; then
-  export AR=/opt/x86_64-apple-darwin14/bin/llvm-ar
+  export AR=/opt/x86_64-apple-darwin14/bin/x86_64-apple-darwin14-ar
   ../configure --prefix=$prefix --disable-pkg-config --host=${target}  \
   --with-asl-lib="${prefix}/lib/libasl.a" --with-asl-incdir="$prefix/include/asl" \
   --with-blas-lib="${prefix}/lib/libcoinblas.a -lgfortran" \
