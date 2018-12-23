@@ -27,9 +27,6 @@ for path in ${LD_LIBRARY_PATH//:/ }; do
 done
 mkdir build
 cd build/
-if [ $target = "x86_64-w64-mingw32" ] || [ $target = "i686-w64-mingw32" ]; then
-export LDFLAGS="-L${prefix}/lib -lCoinUtils"
-fi
 export CPPFLAGS="-DNDEBUG -w -DCOIN_USE_MUMPS_MPI_H"
 
 ## STATIC BUILD START
@@ -44,6 +41,16 @@ if [ $target = "x86_64-apple-darwin14" ]; then
   --with-coinutils-lib="${prefix}/lib/libcoinlapack.a ${prefix}/lib/libcoinblas.a ${prefix}/lib/libCoinUtils.a -lbz2 -lz" --with-coinutils-incdir="$prefix/include/coin" \
   --with-osi-lib="${prefix}/lib/libOsi.a" --with-osi-incdir="$prefix/include/coin" \
   lt_cv_deplibs_check_method=pass_all
+elif [ $target = "x86_64-w64-mingw32" ] || [ $target = "i686-w64-mingw32" ]; then 
+ ../configure --prefix=$prefix --disable-pkg-config --host=${target}  \
+ --with-asl-lib="${prefix}/lib/libasl.a" --with-asl-incdir="$prefix/include/asl" \
+ --with-lapack-lib="${prefix}/lib/libcoinlapack.a" \
+ --with-mumps-lib="${prefix}/lib/libcoinmumps.a -lgfortran ${prefix}/lib/libcoinmetis.a" --with-mumps-incdir="$prefix/include/coin/ThirdParty" \
+ --with-metis-lib="${prefix}/lib/libcoinmetis.a" --with-metis-incdir="$prefix/include/coin/ThirdParty" \
+ --with-coinutils-lib="${prefix}/lib/libCoinUtils.a ${prefix}/lib/libcoinblas.a ${prefix}/lib/libcoinlapack.a" --with-coinutils-incdir="$prefix/include/coin" \
+ --with-osi-lib="${prefix}/lib/libOsi.a" --with-osi-incdir="$prefix/include/coin" \
+ --with-blas-lib="${prefix}/lib/libcoinblas.a -lgfortran" \
+ lt_cv_deplibs_check_method=pass_all
 else
   ../configure --prefix=$prefix --with-pic --disable-pkg-config --host=${target} --enable-shared --disable-static \
   --enable-dependency-linking lt_cv_deplibs_check_method=pass_all \
@@ -55,9 +62,15 @@ else
   --with-coinutils-lib="-L${prefix}/lib -lCoinUtils" --with-coinutils-incdir="$prefix/include/coin" \
   --with-osi-lib="-L${prefix}/lib -lOsi" --with-osi-incdir="$prefix/include/coin" \
   LDFLAGS=-ldl;
+fi
 ## STATIC BUILD END
 
 ## DYNAMIC BUILD START
+
+#if [ $target = "x86_64-w64-mingw32" ] || [ $target = "i686-w64-mingw32" ]; then
+#export LDFLAGS="-L${prefix}/lib -lCoinUtils"
+#fi
+
 #../configure --prefix=$prefix --with-pic --disable-pkg-config --host=${target} --enable-shared --disable-static \
 #--enable-dependency-linking lt_cv_deplibs_check_method=pass_all \
 #--with-asl-lib="-L${prefix}/lib -lasl" --with-asl-incdir="$prefix/include/asl" \
