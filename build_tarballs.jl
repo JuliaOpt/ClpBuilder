@@ -30,22 +30,31 @@ cd build/
 if [ $target = "x86_64-w64-mingw32" ] || [ $target = "i686-w64-mingw32" ]; then
 export LDFLAGS="-L${prefix}/lib -lCoinUtils"
 fi
-export CPPFLAGS="-DCOIN_USE_MUMPS_MPI_H"
+export CPPFLAGS="-DNDEBUG -w -DCOIN_USE_MUMPS_MPI_H"
 
 ## STATIC BUILD START
 if [ $target = "x86_64-apple-darwin14" ]; then
   export AR=/opt/x86_64-apple-darwin14/bin/llvm-ar
-fi
-../configure --prefix=$prefix --with-pic --disable-pkg-config --host=${target} --enable-shared --disable-static \
---enable-dependency-linking lt_cv_deplibs_check_method=pass_all \
---with-asl-lib="-L${prefix}/lib -lasl" --with-asl-incdir="$prefix/include/asl" \
---with-blas-lib="-L${prefix}/lib -lcoinblas" \
---with-lapack-lib="-L${prefix}/lib -lcoinlapack" \
---with-metis-lib="-L${prefix}/lib -lcoinmetis" --with-metis-incdir="$prefix/include/coin/ThirdParty" \
---with-mumps-lib="-L${prefix}/lib -lcoinmumps" --with-mumps-incdir="$prefix/include/coin/ThirdParty" \
---with-coinutils-lib="-L${prefix}/lib -lCoinUtils" --with-coinutils-incdir="$prefix/include/coin" \
---with-osi-lib="-L${prefix}/lib -lOsi" --with-osi-incdir="$prefix/include/coin" \
-LDFLAGS=-ldl;
+  ../configure --prefix=$prefix --disable-pkg-config --host=${target}  \
+  --with-asl-lib="${prefix}/lib/libasl.a" --with-asl-incdir="$prefix/include/asl" \
+  --with-blas-lib="${prefix}/lib/libcoinblas.a -lgfortran" \
+  --with-lapack-lib="${prefix}/lib/libcoinlapack.a" \
+  --with-metis-lib="${prefix}/lib/libcoinmetis.a" --with-metis-incdir="$prefix/include/coin/ThirdParty" \
+  --with-mumps-lib="${prefix}/lib/libcoinmetis.a ${prefix}/lib/libcoinblas.a ${prefix}/lib/libcoinmumps.a -L/opt/x86_64-apple-darwin14/x86_64-apple-darwin14/lib -lgfortran" --with-mumps-incdir="$prefix/include/coin/ThirdParty" \
+  --with-coinutils-lib="${prefix}/lib/libcoinlapack.a ${prefix}/lib/libcoinblas.a ${prefix}/lib/libCoinUtils.a -lbz2 -lz" --with-coinutils-incdir="$prefix/include/coin" \
+  --with-osi-lib="${prefix}/lib/libOsi.a" --with-osi-incdir="$prefix/include/coin" \
+  lt_cv_deplibs_check_method=pass_all
+else
+  ../configure --prefix=$prefix --with-pic --disable-pkg-config --host=${target} --enable-shared --disable-static \
+  --enable-dependency-linking lt_cv_deplibs_check_method=pass_all \
+  --with-asl-lib="-L${prefix}/lib -lasl" --with-asl-incdir="$prefix/include/asl" \
+  --with-blas-lib="-L${prefix}/lib -lcoinblas" \
+  --with-lapack-lib="-L${prefix}/lib -lcoinlapack" \
+  --with-metis-lib="-L${prefix}/lib -lcoinmetis" --with-metis-incdir="$prefix/include/coin/ThirdParty" \
+  --with-mumps-lib="-L${prefix}/lib -lcoinmumps" --with-mumps-incdir="$prefix/include/coin/ThirdParty" \
+  --with-coinutils-lib="-L${prefix}/lib -lCoinUtils" --with-coinutils-incdir="$prefix/include/coin" \
+  --with-osi-lib="-L${prefix}/lib -lOsi" --with-osi-incdir="$prefix/include/coin" \
+  LDFLAGS=-ldl;
 ## STATIC BUILD END
 
 ## DYNAMIC BUILD START
