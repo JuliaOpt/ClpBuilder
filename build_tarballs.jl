@@ -47,7 +47,7 @@ if [ $target = "x86_64-apple-darwin14" ]; then
   --with-osi-lib="${prefix}/lib/libOsi.a" --with-osi-incdir="$prefix/include/coin" \
   lt_cv_deplibs_check_method=pass_all
 
-  export osiclplib_libs=" -lbz2 -lz ${prefix}/lib/libcoinlapack.a ${prefix}/lib/libCoinUtils.a ${prefix}/lib/libOsi.a ${prefix}/lib/libcoinblas.a"
+  export OSICLPLIB_LIBS=" -lbz2 -lz ${prefix}/lib/libcoinlapack.a ${prefix}/lib/libCoinUtils.a ${prefix}/lib/libOsi.a ${prefix}/lib/libcoinblas.a"
 elif [ $target = "x86_64-w64-mingw32" ] || [ $target = "i686-w64-mingw32" ]; then 
  ../configure --prefix=$prefix --disable-pkg-config --host=${target}  \
  --with-asl-lib="${prefix}/lib/libasl.a" --with-asl-incdir="$prefix/include/asl" \
