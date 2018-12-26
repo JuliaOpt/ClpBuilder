@@ -30,8 +30,13 @@ cd build/
 export CPPFLAGS="-DNDEBUG -w -DCOIN_USE_MUMPS_MPI_H"
 
 ## STATIC BUILD START
+sed -i~ -e 's|LT_LDFLAGS="-no-undefined"|LT_LDFLAGS="-no-undefined -export-symbols-regex \\"Clp\\""|g' ../configure
+sed -i~ -e 's|LT_LDFLAGS="-no-undefined"|LT_LDFLAGS="-no-undefined -export-symbols-regex \\"Clp\\""|g' ../Clp/configure
+
 if [ $target = "x86_64-apple-darwin14" ]; then
   export AR=/opt/x86_64-apple-darwin14/bin/x86_64-apple-darwin14-ar
+  sed -i~ -e "s|~nmedit -s \$output_objdir/\${libname}-symbols.expsym \${lib}| -exported_symbols_list \$output_objdir/\${libname}-symbols.expsym|g" ../configure
+
   ../configure --prefix=$prefix --disable-pkg-config --host=${target}  \
   --with-asl-lib="${prefix}/lib/libasl.a" --with-asl-incdir="$prefix/include/asl" \
   --with-blas-lib="${prefix}/lib/libcoinblas.a -lgfortran" \
@@ -41,6 +46,8 @@ if [ $target = "x86_64-apple-darwin14" ]; then
   --with-coinutils-lib="${prefix}/lib/libcoinlapack.a ${prefix}/lib/libcoinblas.a ${prefix}/lib/libCoinUtils.a -lbz2 -lz" --with-coinutils-incdir="$prefix/include/coin" \
   --with-osi-lib="${prefix}/lib/libOsi.a" --with-osi-incdir="$prefix/include/coin" \
   lt_cv_deplibs_check_method=pass_all
+
+  export osiclplib_libs=" -lbz2 -lz ${prefix}/lib/libcoinlapack.a ${prefix}/lib/libCoinUtils.a ${prefix}/lib/libOsi.a ${prefix}/lib/libcoinblas.a"
 elif [ $target = "x86_64-w64-mingw32" ] || [ $target = "i686-w64-mingw32" ]; then 
  ../configure --prefix=$prefix --disable-pkg-config --host=${target}  \
  --with-asl-lib="${prefix}/lib/libasl.a" --with-asl-incdir="$prefix/include/asl" \
