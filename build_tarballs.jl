@@ -35,7 +35,10 @@ sed -i~ -e 's|LT_LDFLAGS="-no-undefined"|LT_LDFLAGS="-no-undefined -export-symbo
 
 if [ $target = "x86_64-apple-darwin14" ]; then
   export AR=/opt/x86_64-apple-darwin14/bin/x86_64-apple-darwin14-ar
+  
   sed -i~ -e "s|~nmedit -s \$output_objdir/\${libname}-symbols.expsym \${lib}| -exported_symbols_list \$output_objdir/\${libname}-symbols.expsym|g" ../configure
+  export OSICLPLIB_LIBS=" -lbz2 -lz ${prefix}/lib/libcoinlapack.a ${prefix}/lib/libCoinUtils.a ${prefix}/lib/libOsi.a ${prefix}/lib/libcoinblas.a"
+
 
   ../configure --prefix=$prefix --disable-pkg-config --host=${target}  \
   --with-asl-lib="${prefix}/lib/libasl.a" --with-asl-incdir="$prefix/include/asl" \
@@ -47,7 +50,6 @@ if [ $target = "x86_64-apple-darwin14" ]; then
   --with-osi-lib="${prefix}/lib/libOsi.a" --with-osi-incdir="$prefix/include/coin" \
   lt_cv_deplibs_check_method=pass_all
 
-  export OSICLPLIB_LIBS=" -lbz2 -lz ${prefix}/lib/libcoinlapack.a ${prefix}/lib/libCoinUtils.a ${prefix}/lib/libOsi.a ${prefix}/lib/libcoinblas.a"
 elif [ $target = "x86_64-w64-mingw32" ] || [ $target = "i686-w64-mingw32" ]; then 
  ../configure --prefix=$prefix --disable-pkg-config --host=${target}  \
  --with-asl-lib="${prefix}/lib/libasl.a" --with-asl-incdir="$prefix/include/asl" \
