@@ -51,6 +51,9 @@ if [ $target = "x86_64-apple-darwin14" ]; then
   lt_cv_deplibs_check_method=pass_all
 
 elif [ $target = "x86_64-w64-mingw32" ] || [ $target = "i686-w64-mingw32" ]; then 
+
+ export OSICLPLIB_LIBS="${prefix}/lib/libOsi.a   ${prefix}/lib/libCoinUtils.a ${prefix}/lib/libcoinlapack.a  ${prefix}/lib/libcoinblas.a  -lgfortran"
+
  ../configure --prefix=$prefix --disable-pkg-config --host=${target}  \
  --with-asl-lib="${prefix}/lib/libasl.a" --with-asl-incdir="$prefix/include/asl" \
  --with-lapack-lib="${prefix}/lib/libcoinlapack.a" \
@@ -60,6 +63,9 @@ elif [ $target = "x86_64-w64-mingw32" ] || [ $target = "i686-w64-mingw32" ]; the
  --with-osi-lib="${prefix}/lib/libOsi.a" --with-osi-incdir="$prefix/include/coin" \
  --with-blas-lib="${prefix}/lib/libcoinblas.a -lgfortran" \
  lt_cv_deplibs_check_method=pass_all
+
+ sed -i~ -e 's|libClpSolver_la_LIBADD = |libClpSolver_la_LIBADD = $(CLPLIB_LIBS) libClp.la ${prefix}/lib/libcoinblas.a -lgfortran|g' Clp/src/Makefile
+
 else
   ../configure --prefix=$prefix --with-pic --disable-pkg-config --host=${target} --enable-shared --disable-static \
   --enable-dependency-linking lt_cv_deplibs_check_method=pass_all \
