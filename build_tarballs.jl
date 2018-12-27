@@ -64,7 +64,7 @@ elif [ $target = "x86_64-w64-mingw32" ] || [ $target = "i686-w64-mingw32" ]; the
  --with-blas-lib="${prefix}/lib/libcoinblas.a -lgfortran" \
  lt_cv_deplibs_check_method=pass_all
 
- sed -i~ -e 's|libClpSolver_la_LIBADD = |libClpSolver_la_LIBADD = $(CLPLIB_LIBS) libClp.la ${prefix}/lib/libcoinblas.a -lgfortran|g' Clp/src/Makefile
+ sed -i~ -e 's|libClpSolver_la_LIBADD = \$(CLPLIB_LIBS) libClp\.la|libClpSolver_la_LIBADD = $(CLPLIB_LIBS) libClp.la ${prefix}/lib/libcoinblas.a -lgfortran|g' Clp/src/Makefile
 
 else
   ../configure --prefix=$prefix --with-pic --disable-pkg-config --host=${target} --enable-shared --disable-static \
