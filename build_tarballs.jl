@@ -30,15 +30,23 @@ cd build/
 export CPPFLAGS="-DNDEBUG -w -DCOIN_USE_MUMPS_MPI_H"
 
 ## STATIC BUILD START
+# Staticly link all dependencies and export only Clp symbols
+
+# force only exporting symbols related to Clp
 sed -i~ -e 's|LT_LDFLAGS="-no-undefined"|LT_LDFLAGS="-no-undefined -export-symbols-regex \\"Clp\\""|g' ../configure
 sed -i~ -e 's|LT_LDFLAGS="-no-undefined"|LT_LDFLAGS="-no-undefined -export-symbols-regex \\"Clp\\""|g' ../Clp/configure
 
 if [ $target = "x86_64-apple-darwin14" ]; then
+
+  # seems static linking requires apple's ar
   export AR=/opt/x86_64-apple-darwin14/bin/x86_64-apple-darwin14-ar
   
+  # Ignore the "# Don't fix this by using the ld -exported_symbols_list flag, it doesn't exist in older darwin lds"
+  # seems to work for the current version and otherwise a long list of non-Clp symbols are exported
   sed -i~ -e "s|~nmedit -s \$output_objdir/\${libname}-symbols.expsym \${lib}| -exported_symbols_list \$output_objdir/\${libname}-symbols.expsym|g" ../configure
+ 
+  # fix linking issue
   export OSICLPLIB_LIBS=" -lbz2 -lz ${prefix}/lib/libcoinlapack.a ${prefix}/lib/libCoinUtils.a ${prefix}/lib/libOsi.a ${prefix}/lib/libcoinblas.a"
-
 
   ../configure --prefix=$prefix --disable-pkg-config --host=${target}  \
   --with-asl-lib="${prefix}/lib/libasl.a" --with-asl-incdir="$prefix/include/asl" \
@@ -52,6 +60,7 @@ if [ $target = "x86_64-apple-darwin14" ]; then
 
 elif [ $target = "x86_64-w64-mingw32" ] || [ $target = "i686-w64-mingw32" ]; then 
 
+ # fix linking issue
  export OSICLPLIB_LIBS="${prefix}/lib/libOsi.a   ${prefix}/lib/libCoinUtils.a ${prefix}/lib/libcoinlapack.a  ${prefix}/lib/libcoinblas.a  -lgfortran"
 
  ../configure --prefix=$prefix --disable-pkg-config --host=${target}  \
@@ -64,6 +73,7 @@ elif [ $target = "x86_64-w64-mingw32" ] || [ $target = "i686-w64-mingw32" ]; the
  --with-blas-lib="${prefix}/lib/libcoinblas.a -lgfortran" \
  lt_cv_deplibs_check_method=pass_all
 
+ # fix linking issue
  sed -i~ -e 's|libClpSolver_la_LIBADD = \$(CLPLIB_LIBS) libClp\.la|libClpSolver_la_LIBADD = $(CLPLIB_LIBS) libClp.la ${prefix}/lib/libcoinblas.a -lgfortran|g' Clp/src/Makefile
 
 else
