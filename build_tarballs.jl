@@ -48,7 +48,7 @@ if [ $target = "x86_64-apple-darwin14" ]; then
   # fix linking issue
   export OSICLPLIB_LIBS=" -lbz2 -lz ${prefix}/lib/libcoinlapack.a ${prefix}/lib/libCoinUtils.a ${prefix}/lib/libOsi.a ${prefix}/lib/libcoinblas.a"
 
-  ../configure --prefix=$prefix --disable-pkg-config --host=${target}  \
+  ../configure --prefix=$prefix --disable-pkg-config --host=${target} --enable-shared --enable-static  \
   --with-asl-lib="${prefix}/lib/libasl.a" --with-asl-incdir="$prefix/include/asl" \
   --with-blas-lib="${prefix}/lib/libcoinblas.a -lgfortran" \
   --with-lapack-lib="${prefix}/lib/libcoinlapack.a" \
@@ -63,7 +63,7 @@ elif [ $target = "x86_64-w64-mingw32" ] || [ $target = "i686-w64-mingw32" ]; the
  # fix linking issue
  export OSICLPLIB_LIBS="${prefix}/lib/libOsi.a   ${prefix}/lib/libCoinUtils.a ${prefix}/lib/libcoinlapack.a  ${prefix}/lib/libcoinblas.a  -lgfortran"
 
- ../configure --prefix=$prefix --disable-pkg-config --host=${target}  \
+ ../configure --prefix=$prefix --disable-pkg-config --host=${target} --enable-shared --enable-static \
  --with-asl-lib="${prefix}/lib/libasl.a" --with-asl-incdir="$prefix/include/asl" \
  --with-lapack-lib="${prefix}/lib/libcoinlapack.a" \
  --with-mumps-lib="${prefix}/lib/libcoinmumps.a -lgfortran ${prefix}/lib/libcoinmetis.a" --with-mumps-incdir="$prefix/include/coin/ThirdParty" \
@@ -77,7 +77,7 @@ elif [ $target = "x86_64-w64-mingw32" ] || [ $target = "i686-w64-mingw32" ]; the
  sed -i~ -e 's|libClpSolver_la_LIBADD = \$(CLPLIB_LIBS) libClp\.la|libClpSolver_la_LIBADD = $(CLPLIB_LIBS) libClp.la ${prefix}/lib/libcoinblas.a -lgfortran|g' Clp/src/Makefile
 
 else
-  ../configure --prefix=$prefix --with-pic --disable-pkg-config --host=${target} --enable-shared --disable-static \
+  ../configure --prefix=$prefix --with-pic --disable-pkg-config --host=${target} --enable-shared --enable-static \
   --enable-dependency-linking lt_cv_deplibs_check_method=pass_all \
   --with-asl-lib="-L${prefix}/lib -lasl" --with-asl-incdir="$prefix/include/asl" \
   --with-blas-lib="-L${prefix}/lib -lcoinblas" \
