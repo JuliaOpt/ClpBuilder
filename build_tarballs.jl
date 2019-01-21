@@ -77,16 +77,15 @@ elif [ $target = "x86_64-w64-mingw32" ] || [ $target = "i686-w64-mingw32" ]; the
  sed -i~ -e 's|libClpSolver_la_LIBADD = \$(CLPLIB_LIBS) libClp\.la|libClpSolver_la_LIBADD = $(CLPLIB_LIBS) libClp.la ${prefix}/lib/libcoinblas.a -lgfortran|g' Clp/src/Makefile
 
 else
-  ../configure --prefix=$prefix --with-pic --disable-pkg-config --host=${target} --enable-shared --enable-static \
-  --enable-dependency-linking lt_cv_deplibs_check_method=pass_all \
-  --with-asl-lib="-L${prefix}/lib -lasl" --with-asl-incdir="$prefix/include/asl" \
-  --with-blas-lib="-L${prefix}/lib -lcoinblas" \
-  --with-lapack-lib="-L${prefix}/lib -lcoinlapack" \
-  --with-metis-lib="-L${prefix}/lib -lcoinmetis" --with-metis-incdir="$prefix/include/coin/ThirdParty" \
-  --with-mumps-lib="-L${prefix}/lib -lcoinmumps" --with-mumps-incdir="$prefix/include/coin/ThirdParty" \
-  --with-coinutils-lib="-L${prefix}/lib -lCoinUtils" --with-coinutils-incdir="$prefix/include/coin" \
-  --with-osi-lib="-L${prefix}/lib -lOsi" --with-osi-incdir="$prefix/include/coin" \
-  LDFLAGS=-ldl;
+ ../configure --prefix=$prefix --with-pic --disable-pkg-config --host=${target} --enable-shared --enable-static \
+ --with-asl-lib="${prefix}/lib/libasl.a" --with-asl-incdir="$prefix/include/asl" \
+ --with-lapack-lib="${prefix}/lib/libcoinlapack.a" \
+ --with-mumps-lib="${prefix}/lib/libcoinmumps.a -lgfortran ${prefix}/lib/libcoinmetis.a" --with-mumps-incdir="$prefix/include/coin/ThirdParty" \
+ --with-metis-lib="${prefix}/lib/libcoinmetis.a" --with-metis-incdir="$prefix/include/coin/ThirdParty" \
+ --with-coinutils-lib="${prefix}/lib/libCoinUtils.a ${prefix}/lib/libcoinblas.a ${prefix}/lib/libcoinlapack.a" --with-coinutils-incdir="$prefix/include/coin" \
+ --with-osi-lib="${prefix}/lib/libOsi.a" --with-osi-incdir="$prefix/include/coin" \
+ --with-blas-lib="${prefix}/lib/libcoinblas.a -lgfortran" \
+ lt_cv_deplibs_check_method=pass_all LDFLAGS=-ldl;
 fi
 ## STATIC BUILD END
 
