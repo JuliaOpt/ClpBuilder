@@ -57,10 +57,15 @@ COINBLAS_hash = "f9601efb98f04fdba220d49d5bda98d2a5a5e2ed7564df339bc7149b0c303f0
 ASL_version = v"3.1.0"
 ASL_extension = "tar.gz"
 ASL_hash = "587c1a88f4c8f57bef95b58a8586956145417c8039f59b1758365ccc5a309ae9"
+
+# List of symbols that will be externally visible in the Clp library 
+# List of symbols is separated by | and the true symbol names are matched 
+# with a * pre- and post-appended (e.g. Clp matches *Clp*)
+BB_PRESERVE_SYMBOLS = "Clp|maximumIterations"
 ##END-EASY-CHANGE-BLOCK
 
 name = "ClpBuilder"
-# Collection of sources required to build CbcBuilder
+# Collection of sources required to build ClpBuilder
 sources = [
     "./bundled",
     "https://github.com/coin-or/Clp/archive/releases/$(Clp_version).$(Clp_extension)" =>
@@ -83,9 +88,6 @@ sources = [
 
 # Bash recipe for building across all platforms
 script = raw"""
-# separated by | and they are regex
-export finalsyms="Clp"
-
 cd $WORKSPACE/srcdir
 set -e
 ### Preliminaries
@@ -228,10 +230,8 @@ fi
 
 # Staticly link all dependencies and export only Clp symbols
 # force only exporting symbols related to Clp
-sed -i~ -e 's|LT_LDFLAGS="-no-undefined"|LT_LDFLAGS="-no-undefined -export-symbols-regex \\"mysymbols\\""|g' ../configure
-sed -i~ -e 's|LT_LDFLAGS="-no-undefined"|LT_LDFLAGS="-no-undefined -export-symbols-regex \\"mysymbols\\""|g' ../Clp/configure
-sed -i~ -e "s|mysymbols|$finalsyms|g" ../configure
-sed -i~ -e "s|mysymbols|$finalsyms|g" ../Clp/configure
+sed -i~ -e 's|LT_LDFLAGS="-no-undefined"|LT_LDFLAGS="-no-undefined -export-symbols-regex \\"BB_PRESERVE_SYMBOLS\\""|g' ../configure
+sed -i~ -e 's|LT_LDFLAGS="-no-undefined"|LT_LDFLAGS="-no-undefined -export-symbols-regex \\"BB_PRESERVE_SYMBOLS\\""|g' ../Clp/configure
 
 # configure, make and install
 if [ $target = "x86_64-apple-darwin14" ]; then
@@ -295,6 +295,7 @@ make install
 # Clean-up lib directory
 rm ${prefix}/lib/*.a
 """
+script = replace(script, "BB_PRESERVE_SYMBOLS" => BB_PRESERVE_SYMBOLS)
 
 # These are the platforms we will build for by default, unless further
 # platforms are passed in on the command line
