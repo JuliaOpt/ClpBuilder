@@ -61,7 +61,7 @@ ASL_hash = "587c1a88f4c8f57bef95b58a8586956145417c8039f59b1758365ccc5a309ae9"
 # List of symbols that will be externally visible in the Clp library 
 # List of symbols is separated by | and the true symbol names are matched 
 # with a * pre- and post-appended (e.g. Clp matches *Clp*)
-BB_PRESERVE_SYMBOLS = "Clp|maximumIterations"
+PRESERVE_SYMBOLS = ["Clp","maximumIterations"]
 ##END-EASY-CHANGE-BLOCK
 
 name = "ClpBuilder"
@@ -230,8 +230,8 @@ fi
 
 # Staticly link all dependencies and export only Clp symbols
 # force only exporting symbols related to Clp
-sed -i~ -e 's/LT_LDFLAGS="-no-undefined"/LT_LDFLAGS="-no-undefined -export-symbols-regex \\"BB_PRESERVE_SYMBOLS\\""/g' ../configure
-sed -i~ -e 's/LT_LDFLAGS="-no-undefined"/LT_LDFLAGS="-no-undefined -export-symbols-regex \\"BB_PRESERVE_SYMBOLS\\""/g' ../Clp/configure
+sed -i~ -e 's/LT_LDFLAGS="-no-undefined"/LT_LDFLAGS="-no-undefined -export-symbols-regex \\\\"BB_PRESERVE_SYMBOLS\\\\""/g' ../configure
+sed -i~ -e 's/LT_LDFLAGS="-no-undefined"/LT_LDFLAGS="-no-undefined -export-symbols-regex \\\\"BB_PRESERVE_SYMBOLS\\\\""/g' ../Clp/configure
 
 # configure, make and install
 if [ $target = "x86_64-apple-darwin14" ]; then
@@ -279,7 +279,7 @@ fi
 # we switch to -version-script
 if [ $target = "x86_64-linux-gnu" ] || [ $target = "i686-linux-gnu" ]; then 
   echo "{ global:" > $WORKSPACE/srcdir/names.ver
-  echo "*BB_PRESERVE_SYMBOLS*;" | sed -e "s/|/*;*/g" >> $WORKSPACE/srcdir/names.ver
+  echo "*BB_PRESERVE_SYMBOLS_LINUX*;" >> $WORKSPACE/srcdir/names.ver
   echo "local: *; };" >> $WORKSPACE/srcdir/names.ver
   sed -i~ -e 's/archive_expsym_cmds=.*CC.*/archive_expsym_cmds="\\$CC -shared -nostdlib \\$predep_objects \\$libobjs \\$deplibs \\$postdep_objects \\$compiler_flags \\${wl}-soname \\$wl\\$soname \\${wl}-version-script \\${wl}\\$WORKSPACE\/srcdir\/names.ver -o \\$lib"/g' libtool
 fi
@@ -295,7 +295,10 @@ make install
 # Clean-up lib directory
 rm ${prefix}/lib/*.a
 """
+BB_PRESERVE_SYMBOLS = join(PRESERVE_SYMBOLS, raw"""\\|""") 
 script = replace(script, "BB_PRESERVE_SYMBOLS" => BB_PRESERVE_SYMBOLS)
+BB_PRESERVE_SYMBOLS_LINUX = join(PRESERVE_SYMBOLS, "*;*")
+script = replace(script, "BB_PRESERVE_SYMBOLS_LINUX" => BB_PRESERVE_SYMBOLS_LINUX)
 
 # These are the platforms we will build for by default, unless further
 # platforms are passed in on the command line
