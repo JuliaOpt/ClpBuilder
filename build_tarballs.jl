@@ -59,8 +59,7 @@ ASL_extension = "tar.gz"
 ASL_hash = "587c1a88f4c8f57bef95b58a8586956145417c8039f59b1758365ccc5a309ae9"
 
 # List of symbols that will be externally visible in the Clp library 
-# List of symbols is separated by | and the true symbol names are matched 
-# with a * pre- and post-appended (e.g. Clp matches *Clp*)
+# The true symbol names are matched with a * pre- and post-appended (e.g. Clp matches *Clp*)
 PRESERVE_SYMBOLS = ["Clp","maximumIterations"]
 ##END-EASY-CHANGE-BLOCK
 
