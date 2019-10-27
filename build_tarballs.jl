@@ -230,8 +230,8 @@ fi
 
 # Staticly link all dependencies and export only Clp symbols
 # force only exporting symbols related to Clp
-sed -i~ -e 's|LT_LDFLAGS="-no-undefined"|LT_LDFLAGS="-no-undefined -export-symbols-regex \\"BB_PRESERVE_SYMBOLS\\""|g' ../configure
-sed -i~ -e 's|LT_LDFLAGS="-no-undefined"|LT_LDFLAGS="-no-undefined -export-symbols-regex \\"BB_PRESERVE_SYMBOLS\\""|g' ../Clp/configure
+sed -i~ -e 's/LT_LDFLAGS="-no-undefined"/LT_LDFLAGS="-no-undefined -export-symbols-regex \\"BB_PRESERVE_SYMBOLS\\""/g' ../configure
+sed -i~ -e 's/LT_LDFLAGS="-no-undefined"/LT_LDFLAGS="-no-undefined -export-symbols-regex \\"BB_PRESERVE_SYMBOLS\\""/g' ../Clp/configure
 
 # configure, make and install
 if [ $target = "x86_64-apple-darwin14" ]; then
