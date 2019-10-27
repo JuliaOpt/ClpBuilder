@@ -14,6 +14,10 @@ sources = [
 
 # Bash recipe for building across all platforms
 script = raw"""
+# separated by | and they are regex
+export finalsyms="Clp"
+
+
 cd $WORKSPACE/srcdir
 cd Clp-releases-1.16.11/
 update_configure_scripts
@@ -33,8 +37,10 @@ export CPPFLAGS="-DNDEBUG -w -DCOIN_USE_MUMPS_MPI_H"
 # Staticly link all dependencies and export only Clp symbols
 
 # force only exporting symbols related to Clp
-sed -i~ -e 's|LT_LDFLAGS="-no-undefined"|LT_LDFLAGS="-no-undefined -export-symbols-regex \\"Clp\\""|g' ../configure
-sed -i~ -e 's|LT_LDFLAGS="-no-undefined"|LT_LDFLAGS="-no-undefined -export-symbols-regex \\"Clp\\""|g' ../Clp/configure
+sed -i~ -e 's|LT_LDFLAGS="-no-undefined"|LT_LDFLAGS="-no-undefined -export-symbols-regex \\"mysymbols\\""|g' ../configure
+sed -i~ -e 's|LT_LDFLAGS="-no-undefined"|LT_LDFLAGS="-no-undefined -export-symbols-regex \\"mysymbols\\""|g' ../Clp/configure
+sed -i~ -e "s|mysymbols|$finalsyms|g" ../configure
+sed -i~ -e "s|mysymbols|$finalsyms|g" ../Clp/configure
 
 if [ $target = "x86_64-apple-darwin14" ]; then
 
@@ -106,9 +112,17 @@ fi
 #--with-osi-lib="-L${prefix}/lib -lOsi" --with-osi-incdir="$prefix/include/coin"
 ## DYNAMIC BUILD END
 
+# COIN makefiles uses -retain-symbols-file for symbol filtering, which does not seem to filter the dynamic table so 
+# we switch to -version-script
+if [ $target = "x86_64-linux-gnu" ] || [ $target = "i686-linux-gnu" ]; then 
+  echo "{ global:" > $WORKSPACE/srcdir/names.ver
+  echo *$finalsyms*\; | sed -e "s/|/*;*/g" >> $WORKSPACE/srcdir/names.ver
+  echo "local: *; };" >> $WORKSPACE/srcdir/names.ver
+  sed -i~ -e 's/archive_expsym_cmds=.*CC.*/archive_expsym_cmds="\\$CC -shared -nostdlib \\$predep_objects \\$libobjs \\$deplibs \\$postdep_objects \\$compiler_flags \\${wl}-soname \\$wl\\$soname \\${wl}-version-script \\${wl}\\$WORKSPACE\/srcdir\/names.ver -o \\$lib"/g' libtool
+fi
+
 make -j${nproc}
 make install
-
 """
 
 # These are the platforms we will build for by default, unless further
