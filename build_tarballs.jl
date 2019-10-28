@@ -33,24 +33,24 @@ using BinaryBuilder
 
 
 ##START-EASY-CHANGE-BLOCK
-Clp_version = v"1.17.3"
+Clp_version = v"1.16.11"
 Clp_extension = "tar.gz"
-Clp_hash = "25f0692fe1daa492e7801770af6991506ae9a8c34a4cae358d017400a02dfcf8"
-Osi_version = v"0.108.5"
+Clp_hash = "ac42c00ba95e1e034ae75ba0e3a5ff03b452191e0c9b2f5e2d5e65bf652fb0a1"
+Osi_version = v"0.107.9"
 Osi_extension = "tar.gz"
-Osi_hash = "c9a6f098e2824883bb3ec1f12df5987b7a8da0f1241988a5dd4663ac362e6381"
-CoinUtils_version = v"2.11.3"
+Osi_hash = "e2c8a0ee4a2a0abe7475d67f7f98230e8bfbbcb6e74487877e757c996bfd6d30"
+CoinUtils_version = v"2.10.14"
 CoinUtils_extension = "tar.gz"
-CoinUtils_hash = "7c4753816e765974941db75ec89f8855e56b86959f3a5f068fdf95b0003be61c"
+CoinUtils_hash = "929b6eae0aaf62cf4467e506f24dfab1df7ab8d2e5a1ea71e9bab5480e872d84"
 COINMumps_version = v"1.6.0"
 COINMumps_extension = "tar.gz"
 COINMumps_hash = "3f2bb7d13333e85a29cd2dadc78a38bbf469bc3920c4c0933a90b7d8b8dc798a"
 COINMetis_version = v"1.3.5"
 COINMetis_extension = "tar.gz"
 COINMetis_hash = "98a6110d5d004a16ad42ee26cfac508477f44aa6fe296b90a6413fe0273ebe24"
-COINLapack_version = v"1.6.0"
-COINLapack_extension = "zip"
-COINLapack_hash = "227969f240176c8e1f391548f8f854bf81ac13c9c3f9803b345eaa052a399b3a"
+COINLapack_version = v"1.5.6"
+COINLapack_extension = "tar.gz"
+COINLapack_hash = "c625dbb227e54e496430ffa708ddf23df5dbf173a0fcf570e1c249e13e411ba1"
 COINBLAS_version = v"1.4.6"
 COINBLAS_extension = "tar.gz"
 COINBLAS_hash = "f9601efb98f04fdba220d49d5bda98d2a5a5e2ed7564df339bc7149b0c303f0c"
@@ -280,7 +280,7 @@ if [ $target = "x86_64-linux-gnu" ] || [ $target = "i686-linux-gnu" ]; then
   echo "{ global:" > $WORKSPACE/srcdir/names.ver
   echo "*BB_PRESERVE_SYMBOLS*;" | sed -e "s/|/*;*/g" >> $WORKSPACE/srcdir/names.ver
   echo "local: *; };" >> $WORKSPACE/srcdir/names.ver
-  sed -i~ -e 's/archive_expsym_cmds=.*CC.*/archive_expsym_cmds="\\$CC -shared -nostdlib \\$predep_objects \\$libobjs \\$deplibs \\$postdep_objects \\$compiler_flags \\${wl}-soname \\$wl\\$soname \\${wl}-version-script \\${wl}\\$WORKSPACE\/srcdir\/names.ver -o \\$lib"/g' libtool
+#  sed -i~ -e 's/archive_expsym_cmds=.*CC.*/archive_expsym_cmds="\\$CC -shared -nostdlib \\$predep_objects \\$libobjs \\$deplibs \\$postdep_objects \\$compiler_flags \\${wl}-soname \\$wl\\$soname \\${wl}-version-script \\${wl}\\$WORKSPACE\/srcdir\/names.ver -o \\$lib"/g' libtool
 fi
 
 make -j${nproc}
