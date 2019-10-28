@@ -280,7 +280,7 @@ if [ $target = "x86_64-linux-gnu" ] || [ $target = "i686-linux-gnu" ]; then
   echo "{ global:" > $WORKSPACE/srcdir/names.ver
   echo "*BB_PRESERVE_SYMBOLS*;" | sed -e "s/|/*;*/g" >> $WORKSPACE/srcdir/names.ver
   echo "local: *; };" >> $WORKSPACE/srcdir/names.ver
-#  sed -i~ -e 's/archive_expsym_cmds=.*CC.*/archive_expsym_cmds="\\$CC -shared -nostdlib \\$predep_objects \\$libobjs \\$deplibs \\$postdep_objects \\$compiler_flags \\${wl}-soname \\$wl\\$soname \\${wl}-version-script \\${wl}\\$WORKSPACE\/srcdir\/names.ver -o \\$lib"/g' libtool
+  sed -i~ -e 's/archive_expsym_cmds=.*CC.*/archive_expsym_cmds="\\$CC -shared -nostdlib \\$predep_objects \\$libobjs \\$deplibs \\$postdep_objects \\$compiler_flags \\${wl}-soname \\$wl\\$soname \\${wl}-version-script \\${wl}\\$WORKSPACE\/srcdir\/names.ver -o \\$lib"/g' libtool
 fi
 
 make -j${nproc}
